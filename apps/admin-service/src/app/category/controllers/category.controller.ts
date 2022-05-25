@@ -15,21 +15,21 @@ import { CategoryService } from '../services';
 
 @Controller('categories')
 export class CategoryController {
-  constructor(private readonly categoriesService: CategoryService) {}
+  constructor(private readonly categorieService: CategoryService) {}
 
   @Get()
   async index(): Promise<Category[]> {
-    return this.categoriesService.findAll();
+    return this.categorieService.findAll();
   }
 
   @Get(':id')
   async show(@Param('id') id: string): Promise<Category> {
-    return this.categoriesService.findById(id);
+    return this.categorieService.findById(id);
   }
 
   @Post()
   async store(@Body() createCategoryDto: CreateCategoryDto): Promise<void> {
-    return this.categoriesService.create(createCategoryDto);
+    return this.categorieService.create(createCategoryDto);
   }
 
   @Put(':id')
@@ -37,13 +37,13 @@ export class CategoryController {
     @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ): Promise<Category> {
-    return this.categoriesService.update(id, updateCategoryDto);
+    return this.categorieService.update(id, updateCategoryDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async destroy(@Param('id') id: string): Promise<void> {
-    return this.categoriesService.delete(id);
+    return this.categorieService.delete(id);
   }
 
   @Post(':id/players')
@@ -51,7 +51,7 @@ export class CategoryController {
     @Param('id') id: string,
     @Body() addCategoryPlayerDto: AddCategoryPlayerDto,
   ) {
-    return this.categoriesService.includePlayerInCategory(
+    return this.categorieService.includePlayerInCategory(
       id,
       addCategoryPlayerDto,
     );
@@ -61,6 +61,6 @@ export class CategoryController {
   async categoriesByPlayer(
     @Param('playerId') playerId: string,
   ): Promise<Category[]> {
-    return this.categoriesService.findByPlayers(playerId);
+    return this.categorieService.findByPlayers(playerId);
   }
 }

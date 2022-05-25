@@ -45,6 +45,7 @@ export class CategoryService {
 
     const categoryEntity = new this.categoryModel(createCategoryDto);
 
+    //TODO: Disparar evento para criar categoria no challenge-service
     try {
       categoryEntity.save();
     } catch (error) {
@@ -76,6 +77,7 @@ export class CategoryService {
       );
     }
 
+    //TODO: Disparar evento para atualizar categoria no challenge-service
     try {
       categoryEntity = await this.categoryModel.findByIdAndUpdate(
         { _id: id },

@@ -4,6 +4,7 @@
   "projects": {
     "admin-sdk": "libs/admin-sdk",
     "admin-service": "apps/admin-service",
+    "challenge-sdk": "libs/challenge-sdk",
     "challenge-service": "apps/challenge-service",
     "ranking-service": "apps/ranking-service"
   }

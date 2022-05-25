@@ -43,6 +43,7 @@ export class PlayerService {
 
     const player = new this.playerModel(createPlayerDto);
 
+    //TODO: Disparar evento para criar player no challenge-service
     try {
       player.save();
     } catch (error) {
@@ -71,6 +72,7 @@ export class PlayerService {
       );
     }
 
+    //TODO: Disparar evento para criar player no challenge-service
     try {
       player = await this.playerModel.findByIdAndUpdate(
         { _id: id },

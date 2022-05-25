@@ -15,7 +15,10 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@smartranking-admin/admin-sdk": ["libs/admin-sdk/src/index.ts"]
+      "@smartranking-admin/admin-sdk": ["libs/admin-sdk/src/index.ts"],
+      "@smartranking-challenge/challenge-sdk": [
+        "libs/challenge-sdk/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]
