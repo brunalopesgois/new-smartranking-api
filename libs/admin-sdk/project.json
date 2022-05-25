@@ -3,6 +3,29 @@
   "sourceRoot": "libs/admin-sdk/src",
   "projectType": "library",
   "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/admin-sdk",
+        "tsConfig": "libs/admin-sdk/tsconfig.lib.json",
+        "packageJson": "libs/admin-sdk/package.json",
+        "main": "libs/admin-sdk/src/index.ts",
+        "assets": ["libs/admin-sdk/*.md"]
+      }
+    },
+    "publish": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "node tools/scripts/publish.mjs admin-sdk {args.ver} {args.tag}"
+      },
+      "dependsOn": [
+        {
+          "projects": "self",
+          "target": "build"
+        }
+      ]
+    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
