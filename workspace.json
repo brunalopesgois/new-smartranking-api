@@ -2,6 +2,10 @@
   "$schema": "./node_modules/nx/schemas/workspace-schema.json",
   "version": 2,
   "projects": {
+    "admin-sdk": "libs/admin-sdk",
+    "admin-service": "apps/admin-service",
+    "challenge-sdk": "libs/challenge-sdk",
+    "challenge-service": "apps/challenge-service",
     "ranking-service": "apps/ranking-service"
   }
 }
