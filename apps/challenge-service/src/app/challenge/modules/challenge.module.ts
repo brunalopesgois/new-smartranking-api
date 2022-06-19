@@ -2,7 +2,7 @@ import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ChallengeController } from '../controllers';
-import { ChallengeSchema } from '../schemas';
+import { CategorySchema, ChallengeSchema, PlayerSchema } from '../schemas';
 import { ChallengeService } from '../services';
 
 @Module({
@@ -11,6 +11,14 @@ import { ChallengeService } from '../services';
       {
         name: 'Challenge',
         schema: ChallengeSchema,
+      },
+      {
+        name: 'Category',
+        schema: CategorySchema,
+      },
+      {
+        name: 'Player',
+        schema: PlayerSchema,
       },
     ]),
     HttpModule,

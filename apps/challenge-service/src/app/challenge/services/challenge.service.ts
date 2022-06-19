@@ -63,7 +63,7 @@ export class ChallengeService {
       throw new InternalServerErrorException(error.message);
     }
 
-    this.logger.log(`Created category: ${JSON.stringify(challengeEntity)}`);
+    this.logger.log(`Created challenge: ${JSON.stringify(challengeEntity)}`);
   }
 
   async findByPlayers(playerId: string): Promise<Challenge[]> {
