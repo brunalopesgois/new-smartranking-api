@@ -8,7 +8,7 @@ import { WorkerPlayerCreatedModule } from './module';
     transport: Transport.RMQ,
     options: {
       urls:['amqp://localhost:5672'],
-      queue: 'books_queue',
+      queue: 'challenge_create_player_queue',
       queueOptions: {
         durable: false
       }

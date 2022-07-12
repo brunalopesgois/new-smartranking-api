@@ -32,6 +32,29 @@
         "buildTarget": "challenge-service:build"
       }
     },
+    "build-player-created": {
+      "executor": "@nrwl/node:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/challenge-service/src/app/challenge/workers/player-created/",
+        "main": "apps/challenge-service/src/app/challenge/workers/player-created/main.ts",
+        "tsConfig": "apps/challenge-service/tsconfig.app.json",
+        "assets": ["apps/challenge-service/src/assets"]
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false
+        }
+      }
+    },
+    "worker-player-created": {
+      "executor": "@nrwl/node:node",
+      "options": {
+        "buildTarget": "challenge-service:build-player-created"
+      }
+    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],

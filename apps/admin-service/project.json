@@ -32,29 +32,6 @@
         "buildTarget": "admin-service:build"
       }
     },
-    "build-player-created": {
-      "executor": "@nrwl/node:webpack",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/apps/admin-service/src/app/player/workers/player-created/",
-        "main": "apps/admin-service/src/app/player/workers/player-created/main.ts",
-        "tsConfig": "apps/admin-service/tsconfig.app.json",
-        "assets": ["apps/admin-service/src/assets"]
-      },
-      "configurations": {
-        "production": {
-          "optimization": true,
-          "extractLicenses": true,
-          "inspect": false
-        }
-      }
-    },
-    "worker-player-created": {
-      "executor": "@nrwl/node:node",
-      "options": {
-        "buildTarget": "admin-service:build-player-created"
-      }
-    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
