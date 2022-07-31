@@ -9,7 +9,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { HttpService } from '@nestjs/axios';
-import { Challenge } from '../entities';
+import { Challenge, Player } from '../entities';
 import { CreateChallengeDto } from '../dtos';
 import { ChallengeStatus } from '@smartranking-challenge/challenge-sdk';
 
@@ -19,6 +19,7 @@ export class ChallengeService {
 
   constructor(
     @InjectModel('Challenge') private readonly challengeModel: Model<Challenge>,
+    @InjectModel('Player') private readonly playerModel: Model<Player>,
     private readonly httpService: HttpService,
   ) {
     this.logger = new Logger(ChallengeService.name);
@@ -74,11 +75,7 @@ export class ChallengeService {
 
   //TODO: ter players do lado desse serviço, consultar diretamente do db
   private async validatePlayers(players): Promise<void> {
-    const player1 = await firstValueFrom(
-      this.httpService.get(
-        `http://localhost:8080/api/v1/players/${players[0]._id}`,
-      ),
-    );
+    const player1 = await this.playerModel.findById(players[0]._id);
 
     if (!player1) {
       throw new NotFoundException(
@@ -86,11 +83,7 @@ export class ChallengeService {
       );
     }
 
-    const player2 = await firstValueFrom(
-      this.httpService.get(
-        `http://localhost:8080/api/v1/players/${players[1]._id}`,
-      ),
-    );
+    const player2 = await this.playerModel.findById(players[1]._id);
 
     if (!player2) {
       throw new NotFoundException(
