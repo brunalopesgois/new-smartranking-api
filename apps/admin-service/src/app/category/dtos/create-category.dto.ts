@@ -1,5 +1,4 @@
-import { RankEvent } from '../entities/ranking-event.entity';
-import { ArrayMinSize, IsArray, IsNotEmpty } from 'class-validator';
+import { IsInt, IsNotEmpty, IsPositive, Min } from 'class-validator';
 
 export class CreateCategoryDto {
   @IsNotEmpty()
@@ -8,7 +7,18 @@ export class CreateCategoryDto {
   @IsNotEmpty()
   description: string;
 
-  @IsArray()
-  @ArrayMinSize(1)
-  rankEvents: RankEvent[];
+  @IsNotEmpty()
+  @IsInt()
+  @IsPositive()
+  victoryValue: number;
+
+  @IsNotEmpty()
+  @IsInt()
+  @IsPositive()
+  victoryOverLeaderValue: number;
+
+  @IsNotEmpty()
+  @IsInt()
+  @Min(0)
+  defeatValue: number;
 }

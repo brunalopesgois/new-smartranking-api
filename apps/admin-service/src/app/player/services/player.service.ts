@@ -40,13 +40,12 @@ export class PlayerService {
 
     if (playerExists) {
       throw new BadRequestException(
-        `Player with email ${email} already exists`,
+        `Player with email ${email} already exists`
       );
     }
 
     const player = new this.playerModel(createPlayerDto);
 
-    //TODO: Disparar evento para criar player no challenge-service
     try {
       player.save();
 
@@ -73,7 +72,7 @@ export class PlayerService {
 
     if (sameEmailPlayer && player != sameEmailPlayer) {
       throw new BadRequestException(
-        `Cannot save player with email ${email}. Already exists`,
+        `Cannot save player with email ${email}. Already exists`
       );
     }
 
@@ -82,7 +81,7 @@ export class PlayerService {
       player = await this.playerModel.findByIdAndUpdate(
         { _id: id },
         { $set: updatePlayerDto },
-        { new: true },
+        { new: true }
       );
 
       this.logger.log(`Updated player: ${player}`);

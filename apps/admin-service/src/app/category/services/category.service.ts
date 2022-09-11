@@ -4,11 +4,18 @@ import {
   Logger,
   InternalServerErrorException,
   NotFoundException,
+  Inject,
 } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 import { InjectModel } from '@nestjs/mongoose';
+import { RankEventName, RANK_OPERATION } from '@smartranking-admin/admin-sdk';
 import { Model } from 'mongoose';
 import { PlayerService } from '../../player/services';
-import { AddCategoryPlayerDto, CreateCategoryDto, UpdateCategoryDto } from '../dtos';
+import {
+  AddCategoryPlayerDto,
+  CreateCategoryDto,
+  UpdateCategoryDto,
+} from '../dtos';
 import { Category } from '../entities';
 
 @Injectable()
@@ -18,6 +25,7 @@ export class CategoryService {
   constructor(
     @InjectModel('Category') private readonly categoryModel: Model<Category>,
     private readonly playerService: PlayerService,
+    @Inject('CREATE_CATEGORY_SERVICE') private createCategoryEvent: ClientProxy
   ) {
     this.logger = new Logger(CategoryService.name);
   }
@@ -39,15 +47,37 @@ export class CategoryService {
 
     if (categoryExists) {
       throw new BadRequestException(
-        `Category with name ${category} already exists`,
+        `Category with name ${category} already exists`
       );
     }
 
-    const categoryEntity = new this.categoryModel(createCategoryDto);
+    const categoryEntity: Category = new this.categoryModel({
+      category: createCategoryDto.category,
+      description: createCategoryDto.description,
+      rankEvents: [
+        {
+          name: RankEventName.VICTORY,
+          operation: RANK_OPERATION,
+          value: createCategoryDto.victoryValue,
+        },
+        {
+          name: RankEventName.VICTORY_OVER_LEADER,
+          operation: RANK_OPERATION,
+          value: createCategoryDto.victoryOverLeaderValue,
+        },
+        {
+          name: RankEventName.DEFEAT,
+          operation: RANK_OPERATION,
+          value: createCategoryDto.defeatValue,
+        },
+      ],
+    });
 
     //TODO: Disparar evento para criar categoria no challenge-service
     try {
       categoryEntity.save();
+
+      this.createCategoryEvent.emit('category-created', categoryEntity);
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
@@ -57,7 +87,7 @@ export class CategoryService {
 
   async update(
     id: string,
-    updateCategoryDto: UpdateCategoryDto,
+    updateCategoryDto: UpdateCategoryDto
   ): Promise<Category> {
     this.logger.log(`Update category: ${JSON.stringify(updateCategoryDto)}`);
 
@@ -73,7 +103,7 @@ export class CategoryService {
 
     if (sameNameCategory && categoryEntity != sameNameCategory) {
       throw new BadRequestException(
-        `Cannot save category with name ${category}. Already exists`,
+        `Cannot save category with name ${category}. Already exists`
       );
     }
 
@@ -82,7 +112,7 @@ export class CategoryService {
       categoryEntity = await this.categoryModel.findByIdAndUpdate(
         { _id: id },
         { $set: updateCategoryDto },
-        { new: true },
+        { new: true }
       );
 
       this.logger.log(`Updated category: ${categoryEntity}`);
@@ -113,7 +143,7 @@ export class CategoryService {
 
   async includePlayerInCategory(
     id: string,
-    addCategoryPlayerDto: AddCategoryPlayerDto,
+    addCategoryPlayerDto: AddCategoryPlayerDto
   ): Promise<void> {
     const category = await this.findById(id);
 
@@ -136,7 +166,7 @@ export class CategoryService {
 
     if (playerInCategory.length > 0) {
       throw new NotFoundException(
-        `Player with id ${id} already exists in category ${category.category}`,
+        `Player with id ${id} already exists in category ${category.category}`
       );
     }
 
@@ -145,7 +175,7 @@ export class CategoryService {
     try {
       await this.categoryModel.findByIdAndUpdate(
         { _id: id },
-        { $set: category },
+        { $set: category }
       );
     } catch (error) {
       throw new InternalServerErrorException(error.message);
