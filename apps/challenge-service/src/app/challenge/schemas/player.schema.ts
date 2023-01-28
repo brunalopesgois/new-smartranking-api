@@ -4,6 +4,7 @@ export const PlayerSchema = new mongoose.Schema(
   {
     email: { type: String, unique: true },
     name: String,
+    phone: String,
   },
-  { timestamps: true, collection: 'players' },
+  { timestamps: true, collection: 'players' }
 );

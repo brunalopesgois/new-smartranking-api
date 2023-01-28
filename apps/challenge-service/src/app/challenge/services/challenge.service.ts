@@ -1,4 +1,3 @@
-import { firstValueFrom } from 'rxjs';
 import {
   BadRequestException,
   Injectable,
@@ -8,8 +7,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { HttpService } from '@nestjs/axios';
-import { Challenge, Player } from '../entities';
+import { Category, Challenge, Player } from '../entities';
 import { CreateChallengeDto } from '../dtos';
 import { ChallengeStatus } from '@smartranking-challenge/challenge-sdk';
 
@@ -20,7 +18,7 @@ export class ChallengeService {
   constructor(
     @InjectModel('Challenge') private readonly challengeModel: Model<Challenge>,
     @InjectModel('Player') private readonly playerModel: Model<Player>,
-    private readonly httpService: HttpService,
+    @InjectModel('Category') private readonly categoryModel: Model<Category>
   ) {
     this.logger = new Logger(ChallengeService.name);
   }
@@ -40,20 +38,27 @@ export class ChallengeService {
 
     await this.validatePlayers(players);
 
-    // TODO: ter categories do lado desse serviço, consultar diretamente do db
-    const category = await firstValueFrom(
-      this.httpService.get(
-        `http://localhost:8080/api/v1/categories?player=${requester._id}`,
-      ),
-    );
+    const categories = await this.categoryModel.find();
 
-    if (!category.data) {
+    let dbCategory: Category;
+
+    for (const category of categories) {
+      for (const player of category.players) {
+        if (player.email == requester.email) {
+          dbCategory = category;
+        }
+      }
+    }
+
+    //TODO: publish/consume event of players added in category
+
+    if (!dbCategory) {
       throw new BadRequestException('The requester must have a category');
     }
 
     const challengeEntity = new this.challengeModel({
       ...createChallengeDto,
-      category: category.data.category,
+      category: dbCategory.category,
       requestDateTime: new Date(),
       status: ChallengeStatus.PENDING,
     });
@@ -73,13 +78,12 @@ export class ChallengeService {
       .populate('players');
   }
 
-  //TODO: ter players do lado desse serviço, consultar diretamente do db
   private async validatePlayers(players): Promise<void> {
     const player1 = await this.playerModel.findById(players[0]._id);
 
     if (!player1) {
       throw new NotFoundException(
-        `The player with id ${players[0]._id} does not exist`,
+        `The player with id ${players[0]._id} does not exist`
       );
     }
 
@@ -87,7 +91,7 @@ export class ChallengeService {
 
     if (!player2) {
       throw new NotFoundException(
-        `The player with id ${players[1]._id} does not exist`,
+        `The player with id ${players[1]._id} does not exist`
       );
     }
   }

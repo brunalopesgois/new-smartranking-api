@@ -8,7 +8,7 @@ export class WorkerPlayerCreated {
   constructor(private readonly playerService: PlayerService) {}
 
   @EventPattern('player-created')
-  async handlePlayerCreatedEvent(data: Record<string, IPlayer>) {
+  async handlePlayerCreatedEvent(data: IPlayer) {
     try {
       this.playerService.create(data);
     } catch (error) {

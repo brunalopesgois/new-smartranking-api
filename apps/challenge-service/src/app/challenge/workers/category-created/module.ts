@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CategorySchema } from '../../schemas';
+import { CategoryService } from '../../services';
 import { WorkerCategoryCreated } from './worker';
 
 @Module({
@@ -25,6 +26,6 @@ import { WorkerCategoryCreated } from './worker';
     ]),
   ],
   controllers: [WorkerCategoryCreated],
-  providers: [],
+  providers: [CategoryService],
 })
 export class WorkerCategoryCreatedModule {}

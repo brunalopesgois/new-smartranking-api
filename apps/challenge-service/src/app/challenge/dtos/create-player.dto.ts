@@ -1,11 +1,14 @@
-import { IsEmail, IsPhoneNumber } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsPhoneNumber } from 'class-validator';
 
 export class CreatePlayerDto {
+  @IsNotEmpty()
   @IsPhoneNumber('BR')
-  readonly phone?: string;
+  phone: string;
 
+  @IsNotEmpty()
   @IsEmail()
-  readonly email?: string;
+  email: string;
 
-  readonly name?: string;
+  @IsNotEmpty()
+  name: string;
 }

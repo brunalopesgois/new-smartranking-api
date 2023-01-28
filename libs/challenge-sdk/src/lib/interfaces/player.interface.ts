@@ -3,5 +3,7 @@ export interface IPlayer {
 
   email: string;
 
+  phone: string;
+
   name: string;
 }

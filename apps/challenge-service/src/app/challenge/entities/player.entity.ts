@@ -6,6 +6,8 @@ export class Player extends Document implements IPlayer {
 
   email: string;
 
+  phone: string;
+
   name: string;
 
   constructor(player: Partial<Player>) {
